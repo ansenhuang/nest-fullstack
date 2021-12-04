@@ -1,0 +1,27 @@
+{
+  "name": "nest-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,css,less,json,md}'",
+    "prettier-check": "prettier --check '**/*.{js,jsx,ts,tsx,css,less,json,md}'"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "husky": "^3.1.0",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,css,less,json,md}": [
+      "prettier --write"
+    ]
+  }
+}
