@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "node scripts/build.js",
+    "start": "node scripts/start.js",
     "prettier": "prettier --write '**/*.{js,jsx,ts,tsx,css,less,json,md}'",
     "prettier-check": "prettier --check '**/*.{js,jsx,ts,tsx,css,less,json,md}'"
   },
