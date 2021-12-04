@@ -6,11 +6,12 @@ const IndexPage: React.FC = () => {
 
   useEffect(() => {
     axios({
-      url: '/api/json',
+      url: '/api/users',
       method: 'GET',
-      params: {
-        name: 'xxx',
-      },
+      // data: {
+      //   firstName: 'firstName2',
+      //   lastName: 'lastName2',
+      // },
     }).then((res) => {
       setData(res.data || {});
     });
@@ -19,7 +20,7 @@ const IndexPage: React.FC = () => {
   return (
     <div>
       <h1>Index</h1>
-      <p>{JSON.stringify(data)}</p>
+      <pre style={{ padding: 10, backgroundColor: '#eee' }}>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 };
