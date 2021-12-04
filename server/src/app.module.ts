@@ -8,12 +8,14 @@ import { UsersModule } from './users/users.module';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: config.staticPath,
+      exclude: ['/api*'],
     }),
     SequelizeModule.forRoot({
       autoLoadModels: true,
       synchronize: true,
       ...config.db,
     }),
+    // api
     UsersModule,
   ],
 })

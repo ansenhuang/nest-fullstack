@@ -9,6 +9,6 @@ const currConfig = isEnvDevelopment ? devConfig : isEnvTest ? testConfig : prodC
 
 export default {
   port: 5700,
-  staticPath: join(__dirname, '../../public'),
+  staticPath: join(__dirname, '../../../client/dist'),
   ...currConfig,
 };
