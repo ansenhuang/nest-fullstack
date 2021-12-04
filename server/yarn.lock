@@ -659,6 +659,13 @@
     jsonc-parser "3.0.0"
     pluralize "8.0.0"
 
+"@nestjs/serve-static@^2.2.2":
+  version "2.2.2"
+  resolved "http://bnpm.byted.org/@nestjs/serve-static/-/serve-static-2.2.2.tgz#8e9dc2fc6c042ddac5133b957d6bc25d9f8fa225"
+  integrity sha512-3Mr+Q/npS3N7iGoF3Wd6Lj9QcjMGxbNrSqupi5cviM0IKrZ1BHl5qekW95rWYNATAVqoTmjGROAq+nKKpuUagQ==
+  dependencies:
+    path-to-regexp "0.1.7"
+
 "@nestjs/testing@^8.0.0":
   version "8.2.3"
   resolved "http://bnpm.byted.org/@nestjs/testing/-/testing-8.2.3.tgz#e96a939e147b066ccfac45504f5b8b74536f79b0"
@@ -3907,11 +3914,6 @@ prettier-linter-helpers@^1.0.0:
   integrity sha1-0j1B/hN1ZG3i0BBNNFSjAIgCz3s=
   dependencies:
     fast-diff "^1.1.2"
-
-prettier@^2.3.2:
-  version "2.5.0"
-  resolved "http://bnpm.byted.org/prettier/-/prettier-2.5.0.tgz#a6370e2d4594e093270419d9cc47f7670488f893"
-  integrity sha512-FM/zAKgWTxj40rH03VxzIPdXmj39SwSjwG0heUcNFwI+EMZJnY93yAiKXM3dObIKAM5TA88werc8T/EwhB45eg==
 
 pretty-format@^27.0.0, pretty-format@^27.4.2:
   version "27.4.2"
