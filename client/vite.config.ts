@@ -4,11 +4,14 @@ import react from '@vitejs/plugin-react';
 import { inspectorServer } from 'react-dev-inspector/plugins/vite';
 import usePluginImport from 'vite-plugin-importer';
 
+const isEnvDevelopment = process.env.NODE_ENV === 'development';
+// const isEnvProduction = process.env.NODE_ENV === 'production';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    inspectorServer(),
+    isEnvDevelopment && inspectorServer(),
     usePluginImport({
       libraryName: 'antd',
       libraryDirectory: 'es',
@@ -24,7 +27,7 @@ export default defineConfig({
       libraryDirectory: '',
       camel2DashComponentName: false,
     }),
-  ],
+  ].filter(Boolean),
   resolve: {
     alias: [
       { find: /^~/, replacement: '' },
