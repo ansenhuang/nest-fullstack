@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SequelizeModule } from '@nestjs/sequelize';
 import config from './config';
-import { UsersModule } from './users/users.module';
+import { EntityModule } from './entity/entity.module';
+import { FieldModule } from './field/field.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UsersModule } from './users/users.module';
       ...config.db,
     }),
     // api
-    UsersModule,
+    EntityModule,
+    FieldModule,
   ],
 })
 export class AppModule {}
