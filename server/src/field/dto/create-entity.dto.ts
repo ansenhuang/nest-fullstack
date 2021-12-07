@@ -4,4 +4,5 @@ export class CreateFieldDto {
   name: string;
   type: string;
   entityId: number;
+  columnName: string;
 }

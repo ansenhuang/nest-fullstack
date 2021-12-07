@@ -9,6 +9,7 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { Field } from '../../field/entities/field.entity';
+import { Store } from '../../store/entities/store.entity';
 
 @Table({
   paranoid: true,
@@ -31,4 +32,7 @@ export class Entity extends Model {
 
   @HasMany(() => Field)
   fields: Field[];
+
+  @HasMany(() => Store)
+  stores: Store[];
 }

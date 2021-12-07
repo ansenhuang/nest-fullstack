@@ -28,6 +28,11 @@ export class Field extends Model {
   @Column
   name: string;
 
+  @Comment('宽表的字段别名')
+  @AllowNull(false)
+  @Column
+  columnName: string;
+
   @Comment('字段类型')
   @AllowNull(false)
   @Column
