@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Inspector } from 'react-dev-inspector';
 import App from './App';
+import { IS_DEV } from './consts';
 
-const DevInspector = process.env.NODE_ENV === 'development' ? Inspector : React.Fragment;
+const DevInspector = IS_DEV ? Inspector : React.Fragment;
 
 ReactDOM.render(
   <BrowserRouter>

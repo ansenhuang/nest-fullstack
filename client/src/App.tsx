@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRoutes } from 'react-router-dom';
-import routes from 'src/consts/routes';
+import getRoutes from './routes';
 
 const App: React.FC = () => {
+  const routes = useMemo(() => getRoutes(), []);
   const element = useRoutes(routes);
   return element;
 };

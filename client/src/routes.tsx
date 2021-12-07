@@ -37,7 +37,7 @@ export interface EnhanceRouteObject extends RouteObject {
   children?: EnhanceRouteObject[];
 }
 
-const routes: EnhanceRouteObject[] = [
+const getRoutes = (): EnhanceRouteObject[] => [
   {
     path: '/',
     name: '首页',
@@ -71,4 +71,4 @@ const routes: EnhanceRouteObject[] = [
   },
 ];
 
-export default routes;
+export default getRoutes;
