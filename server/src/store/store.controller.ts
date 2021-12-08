@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -13,8 +13,8 @@ export class StoreController {
   }
 
   @Get()
-  findAll() {
-    return this.storeService.findAll();
+  findAll(@Query() query) {
+    return this.storeService.findAll(query);
   }
 
   @Get(':id')

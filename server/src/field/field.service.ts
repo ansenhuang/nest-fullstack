@@ -11,8 +11,21 @@ export class FieldService {
     private readonly fieldModel: typeof Field,
   ) {}
 
-  create(createFieldDto: CreateFieldDto) {
-    return this.fieldModel.create(createFieldDto);
+  async create(createFieldDto: CreateFieldDto) {
+    const { entityId } = createFieldDto;
+    const fields = await this.fieldModel.findAll({
+      where: { entityId },
+      attributes: ['columnName'],
+    });
+    // 找出当前最大的字段数字，新增的字段在此之上+1
+    const maxColumnNum = fields.reduce((max, field) => {
+      const num = +field.columnName.split('_')[1];
+      if (num > max) {
+        return num;
+      }
+      return max;
+    }, 1);
+    return this.fieldModel.create({ ...createFieldDto, columnName: `column_${maxColumnNum + 1}` });
   }
 
   findAll(options: { entityId?: string; page?: string; pageSize?: string } = {}) {
@@ -20,7 +33,7 @@ export class FieldService {
     if (!entityId) {
       throw new NotAcceptableException('参数缺少实体ID');
     }
-    const limit = +options.pageSize || 20;
+    const limit = +options.pageSize || 100;
     const offset = ((+options.page || 1) - 1) * limit;
     return this.fieldModel.findAndCountAll({
       where: { entityId },
@@ -34,7 +47,9 @@ export class FieldService {
   }
 
   update(id: number, updateFieldDto: UpdateFieldDto) {
-    return this.fieldModel.update(updateFieldDto, {
+    // columnName不可修改
+    const { columnName, ...restFieldDto } = updateFieldDto;
+    return this.fieldModel.update(restFieldDto, {
       where: { id },
     });
   }

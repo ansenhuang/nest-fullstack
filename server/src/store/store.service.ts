@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { DataType } from 'sequelize-typescript';
 import { Store } from './entities/store.entity';
@@ -11,29 +11,48 @@ export class StoreService {
     @InjectModel(Store)
     private readonly storeModel: typeof Store,
   ) {
-    // const queryInterface = this.storeModel.sequelize.getQueryInterface();
-    // queryInterface.addColumn(this.storeModel.tableName, 'column1', {
-    //   type: DataType.JSON,
-    // });
+    const { tableName, sequelize } = this.storeModel;
+    if (sequelize) {
+      const queryInterface = sequelize.getQueryInterface();
+      // 动态添加字段，先来20个，不够再加
+      Array.from({ length: 20 }).forEach((_, index) => {
+        queryInterface.addColumn(tableName, `column_${index + 1}`, {
+          type: DataType.JSON,
+        });
+      });
+    }
   }
 
   create(createStoreDto: CreateStoreDto) {
-    return 'This action adds a new store';
+    return this.storeModel.create(createStoreDto);
   }
 
-  findAll() {
-    return `This action returns all store`;
+  findAll(options: { entityId?: string; page?: string; pageSize?: string } = {}) {
+    const entityId = +options.entityId;
+    if (!entityId) {
+      throw new NotAcceptableException('参数缺少实体ID');
+    }
+    const limit = +options.pageSize || 20;
+    const offset = ((+options.page || 1) - 1) * limit;
+    return this.storeModel.findAndCountAll({
+      where: { entityId },
+      offset,
+      limit,
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} store`;
+    return this.storeModel.findByPk(id);
   }
 
   update(id: number, updateStoreDto: UpdateStoreDto) {
-    return `This action updates a #${id} store`;
+    return this.storeModel.update(updateStoreDto, {
+      where: { id },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} store`;
+  async remove(id: number) {
+    const store = await this.findOne(id);
+    return store.destroy();
   }
 }

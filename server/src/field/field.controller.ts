@@ -13,7 +13,7 @@ export class FieldController {
   }
 
   @Get()
-  findAll(@Query() query: { page?: string; pageSize?: string }) {
+  findAll(@Query() query) {
     return this.fieldService.findAll(query);
   }
 
