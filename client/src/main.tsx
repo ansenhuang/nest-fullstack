@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Inspector } from 'react-dev-inspector';
+import DevInspector from './components/DevInspector';
 import App from './App';
-import { IS_DEV } from './consts';
-
-const DevInspector = IS_DEV ? Inspector : React.Fragment;
+import 'antd/dist/antd.less';
 
 ReactDOM.render(
   <BrowserRouter>
