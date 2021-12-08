@@ -51,16 +51,16 @@ const getRoutes = (): EnhanceRouteObject[] => [
     element: <DefaultLayout />,
     children: [
       {
-        path: '',
+        path: 'list',
         name: '实体列表',
         icon: <CrownOutlined />,
-        element: getAsyncPage(() => import('src/pages/Entity')),
+        element: getAsyncPage(() => import('src/pages/Entity/List')),
       },
       {
-        path: 'field',
-        name: '字段列表',
+        path: 'detail',
+        name: '实体详情',
         icon: <CrownOutlined />,
-        element: getAsyncPage(() => import('src/pages/Field')),
+        element: getAsyncPage(() => import('src/pages/Entity/Detail')),
       },
     ],
   },

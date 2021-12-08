@@ -6,7 +6,7 @@ const IndexPage: React.FC = () => {
     <div>
       <h1>Index</h1>
       <div>
-        <Link to="/entity">Entity</Link>
+        <Link to="/entity/list">EntityList</Link>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const fieldTypes = [
 export const FieldForm: React.FC<FieldFormProps> = ({ initialValues, submitText, onSuccess }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const isUpdateMode = Boolean(initialValues?.id);
 
   const handleFinish = async () => {
     try {
@@ -72,7 +73,7 @@ export const FieldForm: React.FC<FieldFormProps> = ({ initialValues, submitText,
         name="type"
         rules={[{ required: true, message: '请选择字段类型' }]}
       >
-        <Select>
+        <Select disabled={isUpdateMode}>
           {fieldTypes.map((item) => (
             <Select.Option key={item.value} value={item.value}>
               {item.label}

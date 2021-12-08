@@ -33,7 +33,7 @@ export const EntityList: React.FC = () => {
     {
       title: '名称',
       dataIndex: 'label',
-      render: (value, row) => <Link to={`/entity/field?entityId=${row.id}`}>{value}</Link>,
+      render: (value, row) => <Link to={`/entity/detail?entityId=${row.id}`}>{value}</Link>,
     },
     {
       title: '唯一标识',
