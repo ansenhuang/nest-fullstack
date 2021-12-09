@@ -21,11 +21,18 @@ export class EntityService {
     return this.entityModel.findAndCountAll({
       offset,
       limit,
+      attributes: {
+        exclude: ['deletedAt', 'fieldCount'],
+      },
     });
   }
 
   findOne(id: number) {
-    return this.entityModel.findByPk(id);
+    return this.entityModel.findByPk(id, {
+      attributes: {
+        exclude: ['deletedAt', 'fieldCount'],
+      },
+    });
   }
 
   update(id: number, updateEntityDto: UpdateEntityDto) {

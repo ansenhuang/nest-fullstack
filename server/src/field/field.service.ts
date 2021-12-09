@@ -39,11 +39,18 @@ export class FieldService {
       where: { entityId },
       offset,
       limit,
+      attributes: {
+        exclude: ['deletedAt', 'columnName'],
+      },
     });
   }
 
   findOne(id: number) {
-    return this.fieldModel.findByPk(id);
+    return this.fieldModel.findByPk(id, {
+      attributes: {
+        exclude: ['deletedAt', 'columnName'],
+      },
+    });
   }
 
   update(id: number, updateFieldDto: UpdateFieldDto) {

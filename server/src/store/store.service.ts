@@ -14,11 +14,18 @@ export class StoreService {
     const { tableName, sequelize } = this.storeModel;
     if (sequelize) {
       const queryInterface = sequelize.getQueryInterface();
-      // 动态添加字段，先来20个，不够再加
-      Array.from({ length: 20 }).forEach((_, index) => {
-        queryInterface.addColumn(tableName, `column_${index + 1}`, {
-          type: DataType.JSON,
-        });
+      // 动态添加字段，不够再加
+      Array.from({ length: 30 }).forEach(async (_, index) => {
+        try {
+          await queryInterface.addColumn(
+            tableName,
+            `column_${index + 1}`,
+            {
+              type: DataType.JSON,
+            },
+            { logging: false },
+          );
+        } catch (error) {}
       });
     }
   }

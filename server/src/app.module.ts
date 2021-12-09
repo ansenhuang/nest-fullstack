@@ -15,7 +15,9 @@ import { StoreModule } from './store/store.module';
     SequelizeModule.forRoot({
       autoLoadModels: true,
       synchronize: true,
-      sync: { alter: true },
+      sync: {
+        alter: { drop: false },
+      },
       ...config.db,
     }),
     // api

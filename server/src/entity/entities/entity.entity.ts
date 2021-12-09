@@ -7,6 +7,7 @@ import {
   Unique,
   AllowNull,
   HasMany,
+  Default,
 } from 'sequelize-typescript';
 import { Field } from '../../field/entities/field.entity';
 import { Store } from '../../store/entities/store.entity';
@@ -29,6 +30,11 @@ export class Entity extends Model {
   @Unique
   @Column
   name: string;
+
+  @Comment('累计字段的数量')
+  @Default(0)
+  @Column
+  fieldCount: number;
 
   @HasMany(() => Field)
   fields: Field[];
