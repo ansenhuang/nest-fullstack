@@ -1,6 +1,7 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Field } from './entities/field.entity';
+import { Entity } from '../entity/entities/entity.entity';
 import { CreateFieldDto } from './dto/create-entity.dto';
 import { UpdateFieldDto } from './dto/update-entity.dto';
 
@@ -9,23 +10,25 @@ export class FieldService {
   constructor(
     @InjectModel(Field)
     private readonly fieldModel: typeof Field,
+    @InjectModel(Entity)
+    private readonly entityModel: typeof Entity,
   ) {}
 
   async create(createFieldDto: CreateFieldDto) {
     const { entityId } = createFieldDto;
-    const fields = await this.fieldModel.findAll({
-      where: { entityId },
-      attributes: ['columnName'],
+    const entity = await this.entityModel.findByPk(entityId, {
+      attributes: ['fieldCount'],
     });
-    // 找出当前最大的字段数字，新增的字段在此之上+1
-    const maxColumnNum = fields.reduce((max, field) => {
-      const num = +field.columnName.split('_')[1];
-      if (num > max) {
-        return num;
-      }
-      return max;
-    }, 1);
-    return this.fieldModel.create({ ...createFieldDto, columnName: `column_${maxColumnNum + 1}` });
+    const nextFieldCount = (entity.fieldCount || 0) + 1;
+    await this.entityModel.update(
+      { fieldCount: nextFieldCount },
+      {
+        where: {
+          id: entityId,
+        },
+      },
+    );
+    return this.fieldModel.create({ ...createFieldDto, columnName: `column_${nextFieldCount}` });
   }
 
   findAll(options: { entityId?: string; page?: string; pageSize?: string } = {}) {
