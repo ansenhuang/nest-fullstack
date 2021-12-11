@@ -11,8 +11,12 @@ export class EntityService {
     private readonly entityModel: typeof Entity,
   ) {}
 
-  create(createEntityDto: CreateEntityDto) {
-    return this.entityModel.create(createEntityDto);
+  async create(createEntityDto: CreateEntityDto) {
+    const { fieldCount, ...restValues } = createEntityDto;
+    const entity = await this.entityModel.create(restValues);
+    const resEntity = entity.get();
+    delete resEntity.fieldCount;
+    return resEntity;
   }
 
   findAll(options: { page?: string; pageSize?: string } = {}) {
@@ -36,7 +40,8 @@ export class EntityService {
   }
 
   update(id: number, updateEntityDto: UpdateEntityDto) {
-    return this.entityModel.update(updateEntityDto, {
+    const { fieldCount, ...restValues } = updateEntityDto;
+    return this.entityModel.update(restValues, {
       where: { id },
     });
   }

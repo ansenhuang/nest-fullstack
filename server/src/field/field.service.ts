@@ -17,18 +17,18 @@ export class FieldService {
   async create(createFieldDto: CreateFieldDto) {
     const { entityId } = createFieldDto;
     const entity = await this.entityModel.findByPk(entityId, {
-      attributes: ['fieldCount'],
+      attributes: ['id', 'fieldCount'],
     });
     const nextFieldCount = (entity.fieldCount || 0) + 1;
-    await this.entityModel.update(
-      { fieldCount: nextFieldCount },
-      {
-        where: {
-          id: entityId,
-        },
-      },
-    );
-    return this.fieldModel.create({ ...createFieldDto, columnName: `column_${nextFieldCount}` });
+
+    await entity.update({ fieldCount: nextFieldCount });
+    const field = await this.fieldModel.create({
+      ...createFieldDto,
+      columnName: `column_${nextFieldCount}`,
+    });
+    const resField = field.get();
+    delete resField.columnName;
+    return resField;
   }
 
   findAll(options: { entityId?: string; page?: string; pageSize?: string } = {}) {
