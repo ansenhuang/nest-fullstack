@@ -12,9 +12,9 @@ export class StoreController {
     return this.storeService.create(createStoreDto);
   }
 
-  @Get()
-  findAll(@Query() query) {
-    return this.storeService.findAll(query);
+  @Post('list')
+  findAll(@Body() body) {
+    return this.storeService.findAll(body);
   }
 
   @Get(':id')

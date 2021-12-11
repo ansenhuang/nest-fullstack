@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import { request } from 'src/utils';
 
-export interface FieldFormProps {
+export interface StoreFormProps {
   initialValues: Record<string, any>;
+  fields: Record<string, any>[];
   submitText?: string;
   onSuccess?: (data: any) => void;
 }
@@ -13,26 +14,15 @@ const componentMap: Record<string, React.ComponentType<any>> = {
   TextArea: Input.TextArea,
 };
 
-export const StoreForm: React.FC<FieldFormProps> = ({ initialValues, submitText, onSuccess }) => {
+export const StoreForm: React.FC<StoreFormProps> = ({
+  initialValues,
+  fields,
+  submitText,
+  onSuccess,
+}) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [fields, setFields] = useState<Record<string, any>[]>([]);
   // const isUpdateMode = Boolean(initialValues.id);
-
-  useEffect(() => {
-    request({
-      url: '/api/field',
-      method: 'GET',
-      params: {
-        entityId: initialValues.entityId,
-        page: 1,
-        pageSize: 100,
-      },
-      onSuccess: (res) => {
-        setFields(res.rows || []);
-      },
-    });
-  }, []);
 
   const handleFinish = async () => {
     try {

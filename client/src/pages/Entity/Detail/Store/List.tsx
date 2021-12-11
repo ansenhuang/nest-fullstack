@@ -14,6 +14,7 @@ import {
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useRequest, request } from 'src/utils';
 import { StoreForm } from './Form';
+import { StoreSearch } from './Search';
 
 const pageSize = 20;
 
@@ -31,14 +32,15 @@ export const StoreList: React.FC = () => {
       count: 0,
       rows: [],
     },
-    url: '/api/store',
-    params: {
+    url: '/api/store/list',
+    method: 'POST',
+    data: {
       entityId: searchParams.get('entityId'),
       page: 1,
       pageSize,
     },
     beforeRequest: (options) => {
-      if (!options.params.entityId) {
+      if (!options.data.entityId) {
         const key = 'store_' + Date.now();
         notification.error({
           key,
@@ -108,6 +110,16 @@ export const StoreList: React.FC = () => {
     },
   ];
 
+  const handleSearch = (values: any) => {
+    currentRequest({
+      data: {
+        entityId: searchParams.get('entityId'),
+        page: 1,
+        pageSize,
+        fields: values,
+      },
+    });
+  };
   const handleEdit = (values: any) => {
     editFormKeyRef.current = Date.now();
     setEditVisible(true);
@@ -150,6 +162,7 @@ export const StoreList: React.FC = () => {
 
   return (
     <>
+      <StoreSearch loading={loading} fields={fields} onSearch={handleSearch} />
       <Table
         title={() => (
           <Button type="primary" onClick={() => handleEdit({})}>
@@ -177,6 +190,7 @@ export const StoreList: React.FC = () => {
         <StoreForm
           key={editFormKeyRef.current}
           initialValues={editValues}
+          fields={fields}
           onSuccess={handleEditSuccess}
         />
       </Modal>

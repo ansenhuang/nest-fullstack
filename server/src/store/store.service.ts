@@ -1,5 +1,6 @@
 import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { Store } from './entities/store.entity';
 import { Field } from '../field/entities/field.entity';
 import { CreateStoreDto } from './dto/create-store.dto';
@@ -35,20 +36,49 @@ export class StoreService {
     return resStore;
   }
 
-  async findAll(options: { entityId?: string; page?: string; pageSize?: string } = {}) {
-    const entityId = +options.entityId;
+  async findAll(
+    body: {
+      entityId?: string;
+      page?: string;
+      pageSize?: string;
+      fields?: Record<string, any>;
+    } = {},
+  ) {
+    const entityId = +body.entityId;
     if (!entityId) {
       throw new NotAcceptableException('参数缺少实体ID');
     }
-    const limit = +options.pageSize || 20;
-    const offset = ((+options.page || 1) - 1) * limit;
+    const limit = +body.pageSize || 20;
+    const offset = ((+body.page || 1) - 1) * limit;
 
     const fields = await this.findFields(entityId);
     const fieldAlias = fields.map((field) => [field.columnName, field.name] as [string, string]);
     const attributes = ['id', 'entityId', 'createdAt', 'updatedAt', ...fieldAlias];
 
     return this.storeModel.findAndCountAll({
-      where: { entityId },
+      where: {
+        entityId,
+        [Op.and]: Object.entries(body.fields || {})
+          .map(([k, v]) => {
+            if (v != null && v !== '') {
+              const columnName = fields.find((field) => field.name === k)?.columnName;
+              if (!columnName) return;
+
+              const obj = {};
+              if (typeof v === 'string') {
+                obj[Op.like] = `%${v}%`;
+              } else if (Array.isArray(v)) {
+                obj[Op.in] = v;
+              } else {
+                // todo: add real op
+                obj[Op.eq] = v;
+              }
+
+              return { [columnName]: obj };
+            }
+          })
+          .filter(Boolean),
+      },
       offset,
       limit,
       attributes,
