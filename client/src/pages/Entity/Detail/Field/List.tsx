@@ -1,5 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Table, TableProps, Button, Modal, Space, Popconfirm, message, notification } from 'antd';
 import { useRequest, request, getUid } from 'src/utils';
 import { FieldForm } from './Form';
@@ -12,9 +12,7 @@ export const FieldList: React.FC = () => {
 
   const editFormKeyRef = useRef(Date.now());
   const navigate = useNavigate();
-  const searchParams = useMemo(() => {
-    return new URLSearchParams(window.location.search);
-  }, []);
+  const [searchParams] = useSearchParams();
 
   const { data, setData, loading, currentRequest } = useRequest<{ count: number; rows: any[] }>({
     initialData: {
@@ -145,6 +143,7 @@ export const FieldList: React.FC = () => {
           </Button>
         )}
         loading={loading}
+        bordered
         rowKey="id"
         dataSource={list}
         columns={columns}

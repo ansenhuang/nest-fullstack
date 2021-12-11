@@ -116,6 +116,7 @@ export const EntityList: React.FC = () => {
           </Button>
         )}
         loading={loading}
+        bordered
         rowKey="id"
         dataSource={list}
         columns={columns}

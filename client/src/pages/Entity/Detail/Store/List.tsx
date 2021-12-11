@@ -1,20 +1,30 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Table, TableProps, Button, Modal, Space, Popconfirm, message, notification } from 'antd';
-import { useRequest, request, getUid } from 'src/utils';
+import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Table,
+  TableProps,
+  Button,
+  Modal,
+  Space,
+  Popconfirm,
+  Tooltip,
+  message,
+  notification,
+} from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useRequest, request } from 'src/utils';
 import { StoreForm } from './Form';
 
-const pageSize = 100;
+const pageSize = 20;
 
 export const StoreList: React.FC = () => {
   const [editVisible, setEditVisible] = useState(false);
   const [editValues, setEditValues] = useState<Record<string, any>>({});
+  const [fields, setFields] = useState<Record<string, any>[]>([]);
 
   const editFormKeyRef = useRef(Date.now());
   const navigate = useNavigate();
-  const searchParams = useMemo(() => {
-    return new URLSearchParams(window.location.search);
-  }, []);
+  const [searchParams] = useSearchParams();
 
   const { data, setData, loading, currentRequest } = useRequest<{ count: number; rows: any[] }>({
     initialData: {
@@ -49,6 +59,21 @@ export const StoreList: React.FC = () => {
     },
   });
 
+  useEffect(() => {
+    request({
+      url: '/api/field',
+      method: 'GET',
+      params: {
+        entityId: searchParams.get('entityId'),
+        page: 1,
+        pageSize: 100,
+      },
+      onSuccess: (res) => {
+        setFields(res.rows || []);
+      },
+    });
+  }, []);
+
   const list = data.rows;
   const total = data.count;
   const columns: TableProps<any>['columns'] = [
@@ -56,15 +81,26 @@ export const StoreList: React.FC = () => {
       title: 'ID',
       dataIndex: 'id',
     },
+    ...fields.map((field) => ({
+      title: (
+        <>
+          {field.label}
+          {field.description && (
+            <Tooltip title={field.description}>
+              <QuestionCircleOutlined style={{ marginLeft: 4, color: '#999', cursor: 'pointer' }} />
+            </Tooltip>
+          )}
+        </>
+      ),
+      dataIndex: field.name,
+      render: (text: any) => text ?? '--',
+    })),
     {
       title: '操作',
       render: (_, row, index) => (
         <Space size="large">
           <a onClick={() => handleEdit(row)}>编辑</a>
-          <Popconfirm
-            title={`确定删除【${row.label}】字段吗？`}
-            onConfirm={() => handleDelete(row)}
-          >
+          <Popconfirm title={`确定删除该页面吗？`} onConfirm={() => handleDelete(row)}>
             <a>删除</a>
           </Popconfirm>
         </Space>
@@ -88,7 +124,7 @@ export const StoreList: React.FC = () => {
       nextList.splice(oldIndex, 1, values);
     }
     setData({ ...data, rows: nextList });
-    message.success(oldIndex === -1 ? '字段新建成功' : '字段更新成功');
+    message.success(oldIndex === -1 ? '页面新建成功' : '页面更新成功');
   };
   const handleDelete = (values: any) => {
     if (!values.id) return;
@@ -99,7 +135,7 @@ export const StoreList: React.FC = () => {
       onSuccess: () => {
         const nextList = list.filter((item) => item.id !== values.id);
         setData({ ...data, rows: nextList });
-        message.success('字段删除成功');
+        message.success('页面删除成功');
       },
     });
   };
@@ -116,11 +152,12 @@ export const StoreList: React.FC = () => {
     <>
       <Table
         title={() => (
-          <Button type="primary" onClick={() => handleEdit({ name: getUid() })}>
-            新建字段
+          <Button type="primary" onClick={() => handleEdit({})}>
+            新建页面
           </Button>
         )}
         loading={loading}
+        bordered
         rowKey="id"
         dataSource={list}
         columns={columns}
@@ -133,7 +170,7 @@ export const StoreList: React.FC = () => {
       />
       <Modal
         visible={editVisible}
-        title={(editValues.id ? '编辑' : '新建') + '字段'}
+        title={(editValues.id ? '编辑' : '新建') + '页面'}
         footer={null}
         onCancel={() => setEditVisible(false)}
       >
