@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { SequelizeModule } from '@nestjs/sequelize';
 import config from './config';
+import { UserModule } from './user/user.module';
 import { EntityModule } from './entity/entity.module';
 import { FieldModule } from './field/field.module';
 import { StoreModule } from './store/store.module';
@@ -21,6 +22,7 @@ import { StoreModule } from './store/store.module';
       ...config.db,
     }),
     // api
+    UserModule,
     EntityModule,
     FieldModule,
     StoreModule,

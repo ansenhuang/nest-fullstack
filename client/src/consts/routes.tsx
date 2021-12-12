@@ -1,34 +1,25 @@
 import React from 'react';
-import styled from 'styled-components';
 import { RouteObject } from 'react-router-dom';
 import { HomeOutlined, CrownOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
+import { Loading, AuthRequired } from 'src/components';
 // layouts
 import DefaultLayout from 'src/layouts/DefaultLayout';
 // sync pages
+import IndexPage from 'src/pages/Index';
+import LoginPage from 'src/pages/Login';
 import NoMatchPage from 'src/pages/NoMatch';
 
-const SpinWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-const getAsyncPage = (factory: () => Promise<{ default: any }>) => {
+const getAsyncPage = (
+  factory: () => Promise<{ default: any }>,
+  { auth = true }: { auth?: boolean } = {},
+) => {
   const LazyPage = React.lazy(factory);
-  return (
-    <React.Suspense
-      fallback={
-        <SpinWrapper>
-          <Spin tip="Loading..." size="large" />
-        </SpinWrapper>
-      }
-    >
+  const suspense = (
+    <React.Suspense fallback={<Loading tip="Loading..." size="large" />}>
       <LazyPage />
     </React.Suspense>
   );
+  return auth ? <AuthRequired>{suspense}</AuthRequired> : suspense;
 };
 
 export interface EnhanceRouteObject extends RouteObject {
@@ -42,7 +33,13 @@ const getRoutes = (): EnhanceRouteObject[] => [
     path: '/',
     name: '首页',
     icon: <HomeOutlined />,
-    element: getAsyncPage(() => import('src/pages/Index')),
+    element: <IndexPage />,
+  },
+  {
+    path: '/login',
+    name: '登录',
+    icon: <HomeOutlined />,
+    element: <LoginPage />,
   },
   {
     path: '/entity',

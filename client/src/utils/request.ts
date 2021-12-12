@@ -12,7 +12,7 @@ export interface RequestOptions extends AxiosRequestConfig {
 export const request = (options: RequestOptions) => {
   const { onSuccess, onFailed, onFinally, ...axiosOptions } = options;
 
-  axios(axiosOptions)
+  return axios(axiosOptions)
     .then((res) => {
       onSuccess?.(res.data);
     })
@@ -68,7 +68,7 @@ export const useRequest = <T>({
       setLoading(true);
     }
 
-    request(currOptions);
+    return request(currOptions);
   };
 
   useEffect(() => {
